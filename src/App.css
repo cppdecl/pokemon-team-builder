@@ -1,38 +1,363 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+:root {
+    --attribute-color: rgba(219, 216, 245, 0.5);
+    --bg: linear-gradient(180deg, #f6f7fb, #fff);
+    --panel: #ffffff;
+    --muted: #6b7280;
+    --text: #0f172a;
+    --accent1: #7c3aed;
+    --accent2: #6d28d9;
+    --card-border: rgba(15, 23, 42, 0.06);
+    --card-shadow: 0 6px 18px rgba(16, 24, 40, 0.06);
+    --glass: rgba(255, 255, 255, 0.6);
   }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
+  
+  .pokedex-scroll::-webkit-scrollbar {
+    width: 10px;
+  }
+  .pokedex-scroll::-webkit-scrollbar-track {
+    background: var(--panel);
+  }
+  .pokedex-scroll::-webkit-scrollbar-thumb {
+    background: var(--muted);
+    border-radius: 6px;
+  }
+  .pokedex-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--muted) var(--panel);
+  }
+  
+  .dark {
+    --attribute-color: rgba(79, 75, 127, 0.5);
+    --bg: #000019;
+    --panel: #071127;
+    --muted: #94a3b8;
+    --text: #e6eef8;
+    --accent1: #a78bfa;
+    --accent2: #7c3aed;
+    --card-border: rgba(255, 255, 255, 0.04);
+    --card-shadow: 0 8px 28px rgba(2, 6, 23, 0.6);
+    --glass: rgba(10, 12, 18, 0.5);
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    scroll-behavior: smooth;
+    margin: 0;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+      "Helvetica Neue", Arial;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.32s ease, color 0.28s ease;
+  }
+  
+  .app {
+    max-width: 1100px;
+    margin: 18px auto;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding-right: 20px;
+  }
+  .brand {
+    display: flex;
+    flex-direction: column;
+  }
+  .title {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--accent2);
+    margin: 0;
+  }
+  .subtitle {
+    margin: 2px 0 0 0;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  
+  .main {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+  }
+  
+  .theme-btn-static {
+    background: transparent;
+    border: none;
+    padding: 6px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.25s ease;
+  }
+  .theme-btn-static:hover {
+    background: rgba(124, 58, 237, 0.1);
+  }
+  .theme-btn-static:active {
+    background: rgba(124, 58, 237, 0.2);
+  }
+  .theme-btn-static:focus {
+    outline: none;
+  }
+  .theme-btn-static:focus-visible {
+    outline: 2px solid rgba(124, 58, 237, 0.4);
+  }
+  
+  .theme-icon {
+    width: 20px;
+    height: 20px;
+    display: block;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+  }
+  .icon-light {
     transform: rotate(0deg);
+    opacity: 1;
   }
-  to {
-    transform: rotate(360deg);
+  .icon-dark {
+    transform: rotate(180deg);
+    opacity: 1;
   }
-}
+  
+  .pokedex {
+    flex: 1;
+    min-width: 0;
+    background: var(--panel);
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--card-border);
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 170px);
+    overflow: hidden;
+  }
+  .pokedex-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+  .pokedex-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text);
+  }
+  .search {
+    min-width: 220px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--card-border);
+    background: transparent;
+    color: var(--text);
+    outline: none;
+    transition: box-shadow 0.14s, transform 0.12s;
+  }
+  .search:focus {
+    box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.07);
+    transform: translateY(-1px);
+  }
+  
+  .pokedex-scroll {
+    overflow: auto;
+    padding-right: 6px;
+  }
+  
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    padding-bottom: 12px;
+  }
+  
+  .card {
+    min-height: 190px;
+    border-radius: 12px;
+    background: linear-gradient(180deg, var(--panel), var(--glass));
+    border: 1px solid var(--card-border);
+    box-shadow: var(--card-shadow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px;
+    transition: transform 0.16s ease, box-shadow 0.16s ease,
+      background-color 0.18s;
+    text-align: center;
+  }
+  .card:hover {
+    transform: translateY(-6px) scale(1.01);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  }
+  .card-id {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+    color: var(--muted);
+    font-size: 12px;
+    align-self: flex-start;
+  }
+  .sprite-wrap {
+    width: 96px;
+    height: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 6px;
+  }
+  .sprite {
+    width: 96px;
+    height: 96px;
+    object-fit: contain;
+    image-rendering: pixelated;
+  }
+  .card-name {
+    margin-top: 8px;
+    font-weight: 700;
+    text-transform: capitalize;
+    color: var(--text);
+  }
+  .types {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .type-pill {
+    background: var(--attribute-color);
+    padding: 4px 8px;
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--muted);
+    text-transform: capitalize;
+  }
+  
+  .add-btn {
+    margin-top: 10px;
+    padding: 8px 10px;
+    width: 100%;
+    border-radius: 10px;
+    border: none;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    background: linear-gradient(90deg, var(--accent1), var(--accent2));
+    transition: transform 0.12s ease, filter 0.12s;
+  }
+  .add-btn:active {
+    transform: translateY(1px);
+  }
+  .add-btn.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    filter: grayscale(0.06);
+  }
+  
+  .team {
+    width: 320px;
+    flex-shrink: 0;
+    position: relative;
+  }
+  .team-panel {
+    position: sticky;
+    top: 18px;
+    border-radius: 12px;
+    padding: 14px;
+    background: var(--panel);
+    border: 1px solid var(--card-border);
+    box-shadow: var(--card-shadow);
+  }
+  .team-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  .team-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .team-count {
+    color: var(--muted);
+    font-size: 13px;
+  }
+  
+  .slots {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .slot {
+    min-height: 190px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px;
+    text-align: center;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    background: linear-gradient(180deg, var(--panel), var(--glass));
+    border: 1px solid var(--card-border);
+  }
+  .slot:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 26px rgba(2, 6, 23, 0.06);
+    cursor: pointer;
+  }
+  .slot.empty {
+    border-style: dashed;
+    color: var(--muted);
+    background: transparent;
+    box-shadow: none;
+    cursor: default;
+  }
+  .slot img {
+    width: 96px;
+    height: 96px;
+    object-fit: contain;
+  }
+  
+  .tip {
+    margin-top: 10px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+  
+  @media (max-width: 880px) {
+    .main {
+      flex-direction: column;
+    }
+    .team {
+      width: 100%;
+    }
+    .slots {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    .card,
+    .slot,
+    .add-btn {
+      transition: none !important;
+      transform: none !important;
+    }
+  }
+  
